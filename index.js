@@ -82,11 +82,20 @@ run().catch(console.dir);
 
 
 
-
+// root route
 app.get('/', (req, res) => {
-  res.send('Hello Sir!')
-})
+  res.send('ZaheenKnitwear Server is running 🚀');
+});
 
-app.listen(port, () => {
-  console.log(`zaheenkintwear app listening on port ${port}`)
-})
+/**
+ * ✅ Local server only
+ * ❌ Vercel will ignore this
+ */
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Local server running on port ${port}`);
+  });
+}
+
+// ✅ Export app for Vercel
+module.exports = app;
