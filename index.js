@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express')
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+
 const app = express()
 const port = process.env.PORT || 8000;
 
@@ -24,10 +25,10 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
       await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
       console.log("ZaheenKintwear successfully connected to MongoDB!");
       
-    // DB Collections
+    // DB Collections 
       // create database for products collection  
       const productsCollection = client.db('zaheenkintwear').collection('products')
 
@@ -38,11 +39,34 @@ async function run() {
       res.send(result);
     });
 
+      
+    // Add to cart
+    app.post('/cart', async (req, res) => {
+      const product = req.body;
+
+      const existing = await cartCollection.findOne({
+        productId: product.productId,
+      });
+
+      if (existing) {
+        const update = await cartCollection.updateOne(
+          { productId: product.productId },
+          { $inc: { quantity: 1 } }
+        );
+        return res.send(update);
+      }
+
+      const result = await cartCollection.insertOne({
+        ...product,
+        quantity: 1,
+        addedAt: new Date(),
+      });
+
+      res.send(result);
+    });
 
       
   } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
   }
 }
 run().catch(console.dir);
