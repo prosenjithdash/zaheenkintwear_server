@@ -32,6 +32,9 @@ async function run() {
       // create database for products collection  
       const productsCollection = client.db('zaheenkintwear').collection('products')
 
+      const cartCollection = client.db('zaheenkintwear').collection('cart')
+
+
 
     // Get all products
     app.get('/products', async (req, res) => {
