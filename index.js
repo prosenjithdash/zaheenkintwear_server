@@ -66,6 +66,12 @@ async function run() {
     });
 
       
+      // Get cart items
+    app.get('/cart', async (req, res) => {
+      const result = await cartCollection.find().toArray();
+      res.send(result);
+    });
+
   } finally {
   }
 }
